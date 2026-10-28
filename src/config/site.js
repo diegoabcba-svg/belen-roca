@@ -6,7 +6,7 @@ export const site = {
   whatsapp: '5493517964809',    // sin + ni espacios
   instagram: '', facebook: '', email: '',
   currency: 'ARS', locale: 'es-AR',
-  hero: { image: '/hero.jpg', title: 'ESENCIA & MODA URBANA', subtitle: 'Joyas para todos los días', cta: 'VER COLECCIÓN' },
+  hero: { image: '/hero.jpg', title: 'Vestite para la mujer que queres ser', subtitle: 'Marca tendencia', cta: 'VER COLECCIÓN' },
   colors: { '--c-primary': '#e10600', '--c-ink': '#0a0a0a', '--c-bg': '#ffffff', '--c-soft': '#f4f4f4', '--c-muted': '#6b6b6b', '--c-btn': '#0a0a0a', '--c-btn-text': '#ffffff' },
   fonts: { '--f-display': "'Cormorant Garamond', serif", '--f-body': "'Inter', sans-serif" },
   radius: { '--r-card': '2px' },
