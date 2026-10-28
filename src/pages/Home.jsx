@@ -7,7 +7,11 @@ export default function Home() {
   const { products, categories } = useCatalog(), h = site.hero
   return (<>
     <section className="relative">
-      <img src={h.image} alt={h.title} className="h-[60vh] min-h-80 w-full object-cover" />
+     {/* Imagen optimizada para celulares */}
+<img src="/hero-mobile.jpg" alt={h.title} className="block md:hidden h-[450px] w-full object-cover" />
+
+{/* Imagen para computadoras y tablets */}
+<img src={h.image} alt={h.title} className="hidden md:block h-[60vh] min-h-88 w-full object-cover" />
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
         <h1 className="font-display text-4xl md:text-6xl">{h.title}</h1><p className="mt-2 tracking-widest">{h.subtitle}</p>
         <Link to="/joyeria" className="btn mt-6 !bg-primary">{h.cta}</Link>
