@@ -30,7 +30,7 @@ export default function Layout() {
           <form onSubmit={search} className="ml-auto hidden md:block"><input name="q" placeholder="Buscar..." className="w-48 border-b border-white/40 bg-transparent px-1 py-1 text-sm outline-none" /></form>
           <Link to="/carrito" className="ml-auto md:ml-3 relative min-h-11 px-2 py-2 text-sm">🛒 <span className="rounded-full bg-primary px-2 text-xs">{count}</span></Link>
         </div>
-        {open && <div className="border-t border-white/20 px-4 pb-4 lg:hidden max-h- overflow-y-auto">
+        {open && <div className="border-t border-white/20 px-4 pb-4 lg:hidden max-h-[80vh] overflow-y-auto">
           <form onSubmit={search} className="py-3"><input name="q" placeholder="Buscar producto..." className="w-full border-b border-white/40 bg-transparent py-2 outline-none" /></form>
           {site.nav.map(n => (
             <div key={n.label}>
@@ -62,7 +62,9 @@ export default function Layout() {
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg"
-          aria-label="WhatsApp"[STRIPPED 34 bytes]"0 0 24 24" className="h-7 w-7 fill-current">
+          aria-label="WhatsApp"
+        >
+          <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current">
             <path d="M19.1 4.9A9.9 9.9 0 0 0 12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4A9.9 9.9 0 0 0 12 22c5.5 0 10-4.5 10-10 0-2.7-1-5.1-2.9-7.1zM12 20.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 0 1 3.8 12C3.8 7.5 7.5 3.8 12 3.8c2.2 0 4.2.9 5.8 2.4A8.1 8.1 0 0 1 20.2 12c0 4.5-3.7 8.2-8.2 8.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.1-.3.2-.5.1-.3-.1-1.1-.4-2-1.2-.7-.7-1.2-1.5-1.4-1.7-.1-.3 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.1-.2.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4 0-.6.3-.2.2-.9.8-.9 2s.9 2.4 1 2.6c.1.2 1.8 2.7 4.2 3.8.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3z"/>
           </svg>
         </a>
@@ -70,5 +72,3 @@ export default function Layout() {
     </>
   )
 }
-
-  
