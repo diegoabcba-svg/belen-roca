@@ -1,0 +1,4 @@
+// Datos de respaldo: se usan solo si Supabase no está configurado.
+export const sampleCategories = ['Anillos', 'Aros', 'Cadenas', 'Pulseras', 'Dijes', 'Conjuntos'].map((n, i) => ({ id: i + 1, name: n, slug: n.toLowerCase(), image_url: null }))
+const mk = (id, name, price, cmp, cat, feat) => ({ id, name, slug: name.toLowerCase().replace(/ /g, '-'), description: 'Descripción de ejemplo.', price, compare_price: cmp, stock: 5, featured: feat, material: 'Acero', size: 'Ajustable', created_at: `2026-01-0${id}`, product_images: [], categories: sampleCategories.find(c => c.slug === cat) })
+export const sampleProducts = [mk(1, 'Aro Corazón', 18000, 24000, 'aros', true), mk(2, 'Anillo Clásico', 15000, null, 'anillos', true), mk(3, 'Cadena Fina', 22000, null, 'cadenas', true), mk(4, 'Pulsera Eslabones', 20000, 26000, 'pulseras', true), mk(5, 'Dije Estrella', 12000, null, 'dijes', false), mk(6, 'Conjunto Noche', 38000, 45000, 'conjuntos', true)]

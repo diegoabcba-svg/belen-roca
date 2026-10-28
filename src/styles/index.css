@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@theme inline {
+  --color-primary: var(--c-primary); --color-ink: var(--c-ink); --color-bg: var(--c-bg);
+  --color-soft: var(--c-soft); --color-muted: var(--c-muted); --color-btn: var(--c-btn); --color-btntext: var(--c-btn-text);
+  --font-sans: var(--f-body); --font-display: var(--f-display); --radius-card: var(--r-card);
+}
+body { background: var(--c-bg); color: var(--c-ink); font-family: var(--f-body); }
+.btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 1.25rem; background:var(--c-btn); color:var(--c-btn-text); font-size:.8rem; letter-spacing:.12em; transition:opacity .2s; border-radius:var(--r-card) }
+.btn:hover { opacity:.85 } .btn-outline { background:transparent; color:var(--c-ink); border:1px solid var(--c-ink) }
