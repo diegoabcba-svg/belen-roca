@@ -1,39 +1,27 @@
 import { Link } from 'react-router-dom'
 import { site } from '../config/site'
-
+import { useCatalog, useTitle } from '../hooks/useCatalog'
+import ProductCard from '../components/ProductCard'
 export default function Home() {
-  const h = site.hero
-  return (
-    <div className="w-full overflow-y-auto">
-      <section className="relative w-full bg-black">
-        <picture>
-          <source media="(max-width: 768px)" srcSet="/hero-mobile.jpg" />
-          <img 
-            src="/hero.jpg" 
-            alt={h.title} 
-            className="w-full h-auto max-h-[45vh] md:max-h-[65vh] object-contain md:object-cover object-center block"
-          />
-        </picture>
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 px-4 text-center text-white">
-          <h1 className="font-display text-3xl md:text-6xl">{h.title}</h1>
-          <p className="mt-2 text-sm tracking-widest">{h.subtitle}</p>
-          <Link to="/catalogo" className="mt-6 rounded-full bg-white px-8 py-3 text-sm tracking-widest text-black hover:bg-white/90">{h.cta}</Link>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-12 bg-white text-black min-h-[60vh]">
-        <h2 className="font-display text-2xl text-black">Productos destacados</h2>
-        <p className="mt-2 text-black/60">Descubrí lo último en joyería y moda circular</p>
-        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="h-32 bg-gray-100 rounded flex items-center justify-center">Producto 1</div>
-          <div className="h-32 bg-gray-100 rounded flex items-center justify-center">Producto 2</div>
-          <div className="h-32 bg-gray-100 rounded flex items-center justify-center">Producto 3</div>
-          <div className="h-32 bg-gray-100 rounded flex items-center justify-center">Producto 4</div>
-        </div>
-        <div className="mt-8">
-          <Link to="/catalogo" className="text-sm underline text-black">Ver todo el catálogo →</Link>
-        </div>
-      </section>
-    </div>
-  )
+  useTitle(`${site.name} | ${site.tagline}`)
+  const { products, categories } = useCatalog(), h = site.hero
+  return (<>
+    <section className="relative">
+      <img src={h.image} alt={h.title} className="h-[60vh] min-h-80 w-full object-cover" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
+        <h1 className="font-display text-4xl md:text-6xl">{h.title}</h1><p className="mt-2 tracking-widest">{h.subtitle}</p>
+        <Link to="/joyeria" className="btn mt-6 !bg-primary">{h.cta}</Link>
+      </div>
+    </section>
+    <section className="mx-auto max-w-7xl px-4 pt-12">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-6">{categories.filter(c => !c.parent_id).map(c => (
+        <Link key={c.id} to={`/joyeria?cat=${c.slug}`} className="group text-center">
+          <div className="aspect-square overflow-hidden bg-soft rounded-card">{c.image_url && <img src={c.image_url} alt={c.name} loading="lazy" className="size-full object-cover" />}</div>
+          <p className="mt-2 text-xs tracking-widest">{c.name.toUpperCase()}</p></Link>))}</div>
+    </section>
+    <section className="mx-auto max-w-7xl px-4 pt-12">
+      <h2 className="mb-6 text-center font-display text-3xl">Productos destacados</h2>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{products.filter(p => p.featured).slice(0, 8).map(p => <ProductCard key={p.id} p={p} />)}</div>
+    </section>
+  </>)
 }
