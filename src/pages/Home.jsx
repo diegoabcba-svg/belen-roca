@@ -6,12 +6,10 @@ export default function Home() {
   useTitle(`${site.name} | ${site.tagline}`)
   const { products, categories } = useCatalog(), h = site.hero
   return (<>
-   <section className="relative w-full max-w-[100vw] overflow-hidden">
-  <img src={h.image} alt={h.title} className="h-[38vh] min-h-[250px] md:h-[55vh] lg:h-[65vh] w-full max-w-full object-cover object-[center_15%] md:object-center" />
-  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
-        <h1 className="font-display text-4xl md:text-6xl">{h.title}</h1><p className="mt-2 tracking-widest">{h.subtitle}</p>
-        <Link to="/joyeria" className="btn mt-6 !bg-primary">{h.cta}</Link>
-      </div>
+  <section className="relative w-full max-w-[100vw] overflow-hidden bg-black">
+  <picture>
+    <source media="(max-width: 768px)" srcSet="/hero-mobile.jpg" />
+    <img src="/hero.jpg" alt={h.title} className="h-[32vh] min-h-[220px] md:h-[60vh] lg:h-[70vh] w-full max-w-full object-contain md:object-cover object-center" />
     </section>
     <section className="mx-auto max-w-7xl px-4 pt-12">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-6">{categories.filter(c => !c.parent_id).map(c => (
