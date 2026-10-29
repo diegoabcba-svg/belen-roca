@@ -4,7 +4,7 @@ import { useCatalog, useTitle } from '../hooks/useCatalog'
 import ProductCard from '../components/ProductCard'
 import { discount } from '../lib/format'
 export default function Catalog() {
-  useTitle('Joyería | BELÉN ROCA')
+    useTitle(`${sel?.name || 'Catálogo'} | BELÉN ROCA`)
   const { products, categories } = useCatalog(), [sp, setSp] = useSearchParams(), [show, setShow] = useState(false)
   const cat = sp.get('cat') || '', q = (sp.get('q') || '').toLowerCase(), sort = sp.get('sort') || '', min = +sp.get('min') || 0, max = +sp.get('max') || Infinity
   const set = (k, v) => { const n = new URLSearchParams(sp); v ? n.set(k, v) : n.delete(k); setSp(n) }
@@ -19,7 +19,7 @@ export default function Catalog() {
     <button onClick={() => setSp({})} className="underline">Limpiar filtros</button></div>)
   return (<div className="mx-auto max-w-7xl px-4 py-8">
     <div className="mb-4 flex flex-wrap items-center gap-3">
-      <h1 className="font-display text-3xl">Joyería</h1><span className="text-sm text-muted">{list.length} resultados</span>
+          <h1 className="font-display text-3xl">{sel?.name || 'Catálogo'}</h1>
       <input placeholder="Buscar…" defaultValue={sp.get('q') || ''} onBlur={e => set('q', e.target.value)} className="border p-2 text-sm" />
       <select value={sort} onChange={e => set('sort', e.target.value)} className="ml-auto border p-2 text-sm"><option value="">Ordenar</option><option value="destacados">Destacados</option><option value="nuevos">Novedades</option><option value="precio_asc">Precio: menor a mayor</option><option value="precio_desc">Precio: mayor a menor</option></select>
       <button className="btn md:hidden" onClick={() => setShow(!show)}>FILTROS</button></div>
