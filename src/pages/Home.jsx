@@ -22,14 +22,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pt-12">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+      <section className="mx-auto max-w-7xl px-4 pt-12">  
+        <div className="grid grid-cols-3 gap-2 md:gap-3">
           {categories.filter(c => !c.parent_id).map(c => (
             <Link key={c.id} to={`/joyeria?cat=${c.slug}`} className="group text-center">
               <div className="aspect-square overflow-hidden bg-soft rounded-card">
                 {c.image_url && <img src={c.image_url} alt={c.name} loading="lazy" className="size-full object-cover group-hover:scale-105 transition" />}
               </div>
-              <p className="mt-2 text-xs tracking-widest">{c.name.toUpperCase()}</p>
+  
             </Link>
           ))}
         </div>
