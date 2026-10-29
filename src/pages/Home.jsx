@@ -14,8 +14,8 @@ export default function Home() {
         <img src="/hero-mobile.jpg" alt={h.title} className="block md:hidden h- w-full object-cover" />
         <img src={h.image} alt={h.title} className="hidden md:block h- min-h-88 w-full object-cover" />
         <div className="absolute inset-0 flex flex-col items-center justify-start pt-[15%] md:pt-[18%] bg-black/30 px-4 text-center text-white">
-          <h1 className="font-display text-3xl md:text-6xl drop-shadow-lg">{h.title}</h1>
-          <p className="mt-3 tracking-widest text-sm md:text-base bg-white text-red-600 px-4 py-1 rounded font-bold inline-block">{h.subtitle}</p>
+         <h2 className="font-display text-4xl md:text-6xl uppercase">{h.title}</h2>
+          <p className="mt-3 tracking-widest text-sm md:text-base uppercase text-red-600 font-extrabold" style={{ WebkitTextStroke: '0.9px white', textShadow: '0 1px 0 white, 0 -1px 0 white, 1px 0 0 white, -1px 0 0 white' }}>{h.subtitle}</p>
           <Link to="/joyeria" className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold tracking-widest text-sm rounded transition">
             {h.cta}
           </Link>
