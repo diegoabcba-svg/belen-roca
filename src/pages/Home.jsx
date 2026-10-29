@@ -14,8 +14,8 @@ export default function Home() {
         <img src="/hero-mobile.jpg" alt={h.title} className="block md:hidden h- w-full object-cover" />
         <img src={h.image} alt={h.title} className="hidden md:block h- min-h-88 w-full object-cover" />
         <div className="absolute inset-0 flex flex-col items-center justify-start pt-[15%] md:pt-[18%] bg-black/30 px-4 text-center text-white">
-         <h2 className="font-display text-4xl md:text-6xl uppercase">{h.title}</h2>
-         <p className="mt-3 tracking-widest text-base md:text-lg uppercase text-red-600 font-extrabold">{h.subtitle}</p>
+         <h2 className="font-display text-4xl md:text-6xl uppercase" style={{ fontFamily: "'Bodoni Moda', serif" }}>{h.title}</h2>
+         <p className="mt-3 tracking-widest text-base md:text-lg uppercase text-red-600 font-extrabold" style={{ fontFamily: "'Bodoni Moda', serif" }}>{h.subtitle}</p>
           <Link to="/joyeria" className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold tracking-widest text-sm rounded transition">
             {h.cta}
           </Link>
