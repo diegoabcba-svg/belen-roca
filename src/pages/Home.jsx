@@ -13,10 +13,12 @@ export default function Home() {
       <section className="relative">
         <img src="/hero-mobile.jpg" alt={h.title} className="block md:hidden h- w-full object-cover" />
         <img src={h.image} alt={h.title} className="hidden md:block h- min-h-88 w-full object-cover" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
-          <h1 className="font-display text-4xl md:text-6xl">{h.title}</h1>
-          <p className="mt-2 tracking-widest">{h.subtitle}</p>
-          <Link to="/joyeria" className="btn mt-6 bg-primary">{h.cta}</Link>
+        <div className="absolute inset-0 flex flex-col items-center justify-start pt-[15%] md:pt-[18%] bg-black/30 px-4 text-center text-white">
+          <h1 className="font-display text-3xl md:text-6xl drop-shadow-lg">{h.title}</h1>
+          <p className="mt-2 tracking-widest text-sm md:text-base">{h.subtitle}</p>
+          <Link to="/joyeria" className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold tracking-widest text-sm rounded transition">
+            {h.cta}
+          </Link>
         </div>
       </section>
 
