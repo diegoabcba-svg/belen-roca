@@ -1,27 +1,19 @@
-import { useState, useEffect, useMemo } from 'react';
-import ProductCard from '../components/ProductCard';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import ProductCard from '../components/ProductCard';
 
 export default function Catalog() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [openGroups, setOpenGroups] = useState({
-    'ropa-de-marca': true,
-    'ropa-generica': true,
-    'joyas': true
-  });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat');
     if (cat) setSelectedCategory(cat);
-  }, []);
-
-  useEffect(() => {
     fetchCategories();
     fetchProducts();
   }, []);
@@ -32,101 +24,83 @@ export default function Catalog() {
   }
 
   async function fetchProducts() {
-    const { data } = await supabase
-      .from('products')
-      .select('*, product_images(image_url), categories(name, slug)')
-      .eq('active', true)
-      .order('created_at', { ascending: false });
+    const { data } = await supabase.from('products').select('*, product_images(image_url)').eq('active', true);
     if (data) setProducts(data);
   }
 
-  const groupedCategories = useMemo(() => {
-    const parents = [
-      { id: 7, slug: 'ropa-de-marca', name: 'Ropa de marca', childIds: [10, 11] },
-      { id: 8, slug: 'ropa-generica', name: 'Ropa genérica', childIds: [12, 13] },
-      { id: 9, slug: 'joyas', name: 'Joyas', childIds: [14, 15] }
-    ];
-    return parents.map(p => {
-      const children = categories.filter(c => p.childIds.includes(c.id) || c.parent_id === p.id).map(c => {
-        let display = c.name;
-        if (display.includes(' - ')) display = display.split(' - ')[1];
-        return { ...c, displayName: display };
-      });
-      return { ...p, children };
-    });
-  }, [categories]);
-
-  const toggleGroup = (slug) => {
-    setOpenGroups(prev => ({ ...prev, [slug]: !prev[slug] }));
-  };
-
-  const filteredProducts = products.filter(p => {
-    if (selectedCategory) {
-      const parent = groupedCategories.find(g => g.slug === selectedCategory);
-      if (parent) {
-        const matchChild = parent.children.some(ch => ch.slug === p.categories?.slug);
-        if (!matchChild && p.categories?.slug !== selectedCategory) return false;
-      } else if (p.categories?.slug !== selectedCategory) {
-        return false;
+  const filtered = products.filter(p => {
+    if (selectedCategory && p.category_id) {
+      const cat = categories.find(c => c.id === p.category_id || c.slug === selectedCategory);
+      // Soporta filtro por slug o por id, y por padre
+      if (cat) {
+        if (cat.slug !== selectedCategory && cat.id !== parseInt(selectedCategory)) {
+          // Si es filtro por padre (ropa-de-marca, ropa-generica, joyas), mostrar hijos
+          const parent = categories.find(pr => pr.slug === selectedCategory);
+          if (parent && p.category_id !== parent.id && categories.find(c => c.id === p.category_id)?.parent_id !== parent.id) {
+            // Check si pertenece a hijo del padre seleccionado
+            const childCat = categories.find(c => c.id === p.category_id);
+            if (!childCat || childCat.parent_id !== parent.id) {
+              if (p.categories?.slug !== selectedCategory) {
+                // Fallback por slug directo
+                if (p.category_id && categories.find(c => c.id === p.category_id)?.slug !== selectedCategory) {
+                  return false;
+                }
+              }
+            }
+          }
+        }
+      } else {
+        // Filtro directo por slug en URL
+        if (p.categories?.slug !== selectedCategory) {
+          // Intentar match por slug de categoria del producto
+          const prodCat = categories.find(c => c.id === p.category_id);
+          if (prodCat?.slug !== selectedCategory) return false;
+        }
       }
     }
-    if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     if (minPrice && p.price < parseInt(minPrice)) return false;
     if (maxPrice && p.price > parseInt(maxPrice)) return false;
     return true;
   });
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1">
-          <div className="space-y-6 sticky top-4">
-            <div>
-              <label className="text-[11px] tracking-[0.2em] uppercase font-semibold mb-2 block">Buscar</label>
-              <input type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full border border-black px-3 py-2.5 text-sm focus:outline-none" />
-            </div>
-            <div>
-              <label className="text-[11px] tracking-[0.2em] uppercase font-semibold mb-3 block">Categorías</label>
-              <div className="border border-black">
-                <button onClick={() => setSelectedCategory('')} className={`w-full text-left px-4 py-3 text-sm border-b border-neutral-200 hover:bg-neutral-50 ${!selectedCategory ? 'font-bold bg-black text-white' : ''}`}>Todas las categorías</button>
-                {groupedCategories.map((group) => (
-                  <div key={group.slug} className="border-b border-neutral-200 last:border-b-0">
-                    <button onClick={() => toggleGroup(group.slug)} className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium hover:bg-neutral-50">
-                      <span className="font-semibold">{group.name}</span>
-                      <span className={`text-[10px] transition-transform ${openGroups[group.slug] ? 'rotate-180' : ''}`}>▼</span>
-                    </button>
-                    {openGroups[group.slug] && (
-                      <div className="bg-neutral-50 border-t border-neutral-100">
-                        <button onClick={() => setSelectedCategory(group.slug)} className={`w-full text-left pl-4 pr-4 py-2 text-[13px] hover:bg-white ${selectedCategory === group.slug ? 'font-bold bg-white' : 'text-neutral-600'}`}>Ver todo {group.name}</button>
-                        {group.children.map((child) => (
-                          <button key={child.id} onClick={() => setSelectedCategory(child.slug)} className={`w-full text-left pl-8 pr-4 py-2.5 text-[13px] hover:bg-white flex items-center gap-2 ${selectedCategory === child.slug ? 'font-bold bg-white text-black' : 'text-neutral-600'}`}>
-                            <span>—</span> {child.displayName}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="text-[11px] tracking-[0.2em] uppercase font-semibold mb-3 block">Precio</label>
-              <div className="flex gap-2">
-                <input type="number" placeholder="Mín $" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="flex-1 border border-neutral-300 px-3 py-2.5 text-sm focus:border-black focus:outline-none" />
-                <input type="number" placeholder="Máx $" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="flex-1 border border-neutral-300 px-3 py-2.5 text-sm focus:border-black focus:outline-none" />
-              </div>
-            </div>
-            <button onClick={() => { setSelectedCategory(''); setSearchQuery(''); setMinPrice(''); setMaxPrice(''); }} className="text-xs underline">Limpiar filtros</button>
+    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="lg:col-span-1 space-y-6">
+        <div>
+          <input type="text" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} className="w-full border border-black px-3 py-2 text-sm" />
+        </div>
+        
+        <div>
+          <label className="text-xs uppercase font-semibold mb-2 block">Categorías</label>
+          <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="w-full border border-black px-3 py-2 text-sm">
+            <option value="">Todas las categorías</option>
+            <optgroup label="Ropa de marca">
+              <option value="ropa-de-marca-nueva">Ropa nueva</option>
+              <option value="ropa-de-marca-moda-circular">Moda circular</option>
+            </optgroup>
+            <optgroup label="Ropa genérica">
+              <option value="generica-ropa-nueva">Ropa nueva</option>
+              <option value="generica-moda-circular">Moda circular</option>
+            </optgroup>
+            <optgroup label="Joyas">
+              <option value="joyas-plata-925">Plata 925</option>
+              <option value="joyas-acero-quirurgico">Acero quirúrgico</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs uppercase font-semibold mb-2 block">Precio</label>
+          <div className="flex gap-2">
+            <input type="number" placeholder="Mín $" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="w-full border px-2 py-2 text-sm" />
+            <input type="number" placeholder="Máx $" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="w-full border px-2 py-2 text-sm" />
           </div>
         </div>
-        <div className="lg:col-span-3">
-          <div className="mb-4 text-sm text-neutral-600">{filteredProducts.length} productos</div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
+      </div>
+
+      <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-4">
+        {filtered.map(p => <ProductCard key={p.id} product={p} />)}
       </div>
     </div>
   );
