@@ -15,7 +15,21 @@ export default function Catalog() {
   const by = { precio_asc: (a, b) => a.price - b.price, precio_desc: (a, b) => b.price - a.price, nuevos: (a, b) => b.created_at.localeCompare(a.created_at), destacados: (a, b) => b.featured - a.featured }[sort]
   if (by) list = [...list].sort(by)
   const f = (<div className="space-y-4 text-sm">
-    <select value={cat} onChange={e => set('cat', e.target.value)} className="w-full border p-2"><option value="">Todas las categorías</option>{categories.map(c => <option key={c.id} value={c.slug}>{c.name}</option>)}</select>
+    <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="w-full border border-black px-3 py-2 text-sm">
+  <option value="">Todas las categorías</option>
+  <optgroup label="Ropa de marca">
+    <option value="ropa-de-marca-nueva">Ropa nueva</option>
+    <option value="ropa-de-marca-moda-circular">Moda circular</option>
+  </optgroup>
+  <optgroup label="Ropa genérica">
+    <option value="generica-ropa-nueva">Ropa nueva</option>
+    <option value="generica-moda-circular">Moda circular</option>
+  </optgroup>
+  <optgroup label="Joyas">
+    <option value="joyas-plata-925">Plata 925</option>
+    <option value="joyas-acero-quirurgico">Acero quirúrgico</option>
+  </optgroup>
+</select>
     <div className="flex gap-2"><input type="number" placeholder="Mín" defaultValue={min || ''} onBlur={e => set('min', e.target.value)} className="w-full border p-2" /><input type="number" placeholder="Máx" defaultValue={max === Infinity ? '' : max} onBlur={e => set('max', e.target.value)} className="w-full border p-2" /></div>
     <button onClick={() => setSp({})} className="underline">Limpiar filtros</button></div>)
   return (<div className="mx-auto max-w-7xl px-4 py-8">
